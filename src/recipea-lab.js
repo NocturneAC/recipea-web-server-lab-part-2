@@ -22,28 +22,60 @@ app.use(express.json());
 const getRecipes = async() => {
     // this accessess all recipes in recipea-lab.js
     const recipes = await fs.readFile("../data/recipea-data.json", "utf8");
+    // What is the value of getRecipes once this code is called? What data type? Array!
+    // console.log(recipes);
     return recipes;
 }
 
+getRecipes();
 const getRecipe = async(id) => {
     // this is what allows us to dig into the array of recipes, and pull a specific one
     const data = await fs.readFile("../data/recipea-data.json", "utf8");
-    // What is the value of getRecipes once this code is called? What data type?
+    // console.log(JSON.parse(data)[id]);
     return JSON.parse(data)[id];
 }
 
 const deleteRecipe = async(id) => {
     // this is what allows us to delete a recipe per id, or spot in the stored array
     const data = await fs.readFile("../data/recipea-data.json", "utf8");
-    // What does a .filter(); do? LINK FOR MDN
-    // What is the difference between JSON.parse() and JSON.stringify()? LINK
+    // What does a .filter(); do? https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/filter
+    // What is the difference between JSON.parse() and JSON.stringify()? https://masteringjs.io/tutorials/fundamentals/stringify
     const recipes = JSON.parse(data).filter((recipe, i) =>  i !== id);
+    // const recipes = JSON.parse(data).filter( function (recipe, i) {
+    // return i !== id
+    //});
+
+    // in regards to short hand, this is the key that Laura reviewed:
+    // () => console.log("waddup");
+
+    // function () {
+    //     console.log("WAZZUP");
+    // }
+
+    // i = i + 1
+    // i++
+
 
     const jsonRecipes = JSON.stringify(recipes, null, 2);
+    // THE TWO IS THERE SIMPLY FOR FORMATTING YOUR JSON DATA FILE. ugh. it's defining how many "spaces" indented inwards to add the new values for json key value pairs
     await fs.writeFile("../data/recipea-data.json", jsonRecipes);
 }
 
+// Await/Async - event loop and when items are going to be returning from the function
+
+// Why is this app.get()?
+// THIS IS AN END POINT
 app.get("/find-recipes", async(req, res) => {
     const recipes = await getRecipes();
     res.send(recipes);
 });
+
+// Create a helper function that adds a new Recipe to our list
+    // Get our recipe list
+    // Turn the list from JSON to JS - using JSON.parse()
+    // Take the user's input and turn that into a structured object that matches what's in our recipe list already, in other words, the body of the request will match the formatting of your JSON file.
+    // Create an object with the request from the Front End
+    // Add that object to our recipe array
+    // Turn the array into JSON (this is your raw data)
+    // 
+// Create the post method to handle the user's input
